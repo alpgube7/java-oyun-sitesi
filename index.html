@@ -14,8 +14,9 @@
   --text:#d8d8e8; --dim:#8a8aa0;
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'VT323',monospace;font-size:20px;min-height:100%}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'VT323',monospace;font-size:20px}
 body{
+  display:flex;
   background:
     radial-gradient(1px 1px at 20% 30%, #fff3, transparent),
     radial-gradient(1px 1px at 60% 70%, #fff3, transparent),
@@ -23,88 +24,111 @@ body{
     radial-gradient(1px 1px at 40% 80%, #fff2, transparent),
     #0a0a0f;
 }
-header{padding:28px 16px 10px;text-align:center}
-h1{
-  font-family:'Press Start 2P',monospace;font-size:clamp(16px,4vw,28px);margin:0 0 10px;
-  color:var(--yellow);text-shadow:0 0 12px #ffe14f66, 0 0 30px #ff880044;
-  line-height:1.5;
+aside{
+  width:310px;flex:none;display:flex;flex-direction:column;
+  border-right:1px solid #262636;background:#0a0a0fcc;backdrop-filter:blur(4px);
 }
-.sub{color:var(--cyan);font-size:1.1em;letter-spacing:1px}
-.toolbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:14px 12px 4px;position:sticky;top:0;background:#0a0a0fee;backdrop-filter:blur(6px);z-index:5;border-bottom:1px solid #262636}
+.brand{padding:16px 14px 8px;text-align:center}
+.brand h1{
+  font-family:'Press Start 2P',monospace;font-size:13px;margin:0 0 8px;
+  color:var(--yellow);text-shadow:0 0 12px #ffe14f66, 0 0 30px #ff880044;line-height:1.6;
+}
+.brand .sub{color:var(--cyan);font-size:.9em;letter-spacing:1px}
+.tools{display:flex;gap:8px;align-items:center;padding:10px 12px}
 #search{
-  background:var(--panel2);border:2px solid var(--cyan);color:#fff;padding:10px 14px;
-  font-family:inherit;font-size:1em;width:min(420px,90vw);outline:none;border-radius:4px;
+  flex:1;min-width:0;background:var(--panel2);border:2px solid var(--cyan);color:#fff;
+  padding:8px 10px;font-family:inherit;font-size:1em;outline:none;border-radius:4px;
   box-shadow:0 0 10px #00e5ff33;
 }
 #search::placeholder{color:var(--dim)}
 #search:focus{box-shadow:0 0 16px #00e5ff77}
-#count{align-self:center;color:var(--dim);font-size:.95em}
-.cats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:12px 12px 0}
-.cat{
-  cursor:pointer;border:2px solid #33334a;background:var(--panel);color:var(--text);
-  padding:6px 12px;font-family:inherit;font-size:.95em;border-radius:4px;transition:.12s;
+#count{color:var(--dim);font-size:.9em;white-space:nowrap}
+#list{flex:1;overflow-y:auto;padding:4px 8px 10px;scrollbar-width:thin;scrollbar-color:#2c2c40 transparent}
+.row{
+  padding:5px 10px;cursor:pointer;border:1px solid transparent;border-radius:4px;
+  color:var(--text);font-size:1.02em;line-height:1.25;word-break:break-word;
 }
-.cat:hover{border-color:var(--pink);color:#fff}
-.cat.active{border-color:var(--pink);background:#ff4fd822;color:#fff;box-shadow:0 0 10px #ff4fd844}
-.grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-  gap:12px;padding:18px 16px 40px;max-width:1200px;margin:0 auto;
+.row:nth-child(odd){background:#16161f66}
+.row:hover{border-color:var(--cyan);color:#fff;background:#00e5ff14}
+.row.active{border-color:var(--pink);background:#ff4fd822;color:#fff;box-shadow:0 0 10px #ff4fd844}
+.empty{text-align:center;color:var(--dim);padding:30px 10px;font-size:1.05em}
+.credit{padding:8px 12px;border-top:1px solid #1e1e2a;color:var(--dim);font-size:.8em;text-align:center}
+.credit a{color:var(--cyan)}
+main{flex:1;min-width:0;display:flex;flex-direction:column}
+.keymap{
+  display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:center;
+  padding:8px 12px;background:#16161fe6;border-bottom:1px solid #262636;
 }
-.card{
-  background:linear-gradient(160deg,var(--panel2),var(--panel));
-  border:2px solid #2c2c40;border-radius:6px;padding:14px;
-  display:flex;flex-direction:column;gap:8px;transition:.12s;position:relative;overflow:hidden;
+.km{display:flex;align-items:center;gap:5px;font-size:.92em;color:var(--text)}
+kbd{
+  font-family:'Press Start 2P',monospace;font-size:9px;background:var(--panel2);
+  border:1px solid #3a3a52;border-bottom-width:3px;border-radius:4px;color:var(--cyan);
+  padding:4px 6px;min-width:22px;text-align:center;
 }
-.card:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 6px 18px #000a,0 0 14px #00e5ff33}
-.card .name{font-size:1.15em;color:#fff;line-height:1.15;word-break:break-word;min-height:1.3em}
-.card .cat-tag{font-size:.85em;color:var(--pink);text-transform:uppercase;letter-spacing:1px}
-.card .size{color:var(--dim);font-size:.85em}
-.play{
-  margin-top:auto;background:var(--green);color:#06210e;border:none;padding:9px 10px;
-  font-family:'Press Start 2P',monospace;font-size:11px;cursor:pointer;border-radius:4px;
-  transition:.1s;box-shadow:0 3px 0 #2eb34a;text-decoration:none;text-align:center;display:block;
+.km b{color:var(--yellow);font-weight:normal}
+.kmhint{width:100%;text-align:center;color:var(--dim);font-size:.85em}
+#stage{position:relative;flex:1;min-height:0}
+#frame{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;display:none}
+#placeholder{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--dim);font-size:1.2em;text-align:center;padding:20px;
 }
-.play:hover{filter:brightness(1.12);box-shadow:0 3px 0 #2eb34a,0 0 14px #5dff7a66}
-.play:active{transform:translateY(2px);box-shadow:0 1px 0 #2eb34a}
-.empty{text-align:center;color:var(--dim);padding:50px 10px;font-size:1.2em}
-footer{text-align:center;color:var(--dim);padding:18px;border-top:1px solid #1e1e2a;font-size:.9em}
-footer a{color:var(--cyan)}
-#backtop{
-  position:fixed;right:14px;bottom:14px;background:var(--panel2);border:2px solid var(--cyan);
-  color:var(--cyan);font-family:inherit;font-size:1em;padding:8px 12px;border-radius:4px;
-  cursor:pointer;display:none;z-index:6;
+#back{
+  display:none;position:absolute;top:10px;left:10px;z-index:5;
+  background:var(--panel2);border:2px solid var(--cyan);color:var(--cyan);
+  font-family:inherit;font-size:.95em;padding:6px 12px;border-radius:4px;cursor:pointer;
+}
+@media (max-width:760px){
+  body{flex-direction:column}
+  aside{width:100%;height:100%;border-right:0}
+  main{display:none}
+  body.playing aside{display:none}
+  body.playing main{display:flex}
+  body.playing #back{display:block}
+  .brand{padding-top:10px}
 }
 </style>
 </head>
 <body>
-<header>
-  <h1>ESKİ JAVA OYUNLARI</h1>
-  <div class="sub">★ 2000'lerin telefon oyunları - tarayıcında doğrudan oyna ★</div>
-</header>
-
-<div class="toolbar">
-  <input id="search" type="search" placeholder="oyun ara..." autocomplete="off" />
-  <span id="count"></span>
-</div>
-<div class="cats" id="cats"></div>
-<div class="grid" id="grid"></div>
-<div class="empty" id="empty" style="display:none">oyun bulunamadı :(</div>
-
-<footer>
-  J2ME emülatörü: <a href="https://github.com/iqbaladinur/j2me-player" target="_blank" rel="noopener">J2ME Player</a> (FreeJ2ME + CheerpJ) ·
-  tuşlar: yön tuşları = 2468, Q/W = sol/sağ tuş, 1 = onay, ESC = ayarlar
-</footer>
-<button id="backtop" onclick="scrollTo({top:0,behavior:'smooth'})">▲</button>
+<aside>
+  <div class="brand">
+    <h1>ESKİ JAVA OYUNLARI</h1>
+    <div class="sub">★ tarayıcında doğrudan oyna ★</div>
+  </div>
+  <div class="tools">
+    <input id="search" type="search" placeholder="oyun ara..." autocomplete="off" />
+    <span id="count"></span>
+  </div>
+  <div id="list"></div>
+  <div class="empty" id="empty" style="display:none">oyun bulunamadı :(</div>
+  <div class="credit">J2ME emülatörü: <a href="https://github.com/iqbaladinur/j2me-player" target="_blank" rel="noopener">J2ME Player</a></div>
+</aside>
+<main>
+  <div class="keymap">
+    <span class="km"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> <b>yön</b></span>
+    <span class="km"><kbd>Enter</kbd> <b>onay</b></span>
+    <span class="km"><kbd>F1</kbd> <b>sol tuş</b></span>
+    <span class="km"><kbd>F2</kbd> <b>sağ tuş</b></span>
+    <span class="km"><kbd>Esc</kbd> <b>menü</b></span>
+    <span class="km"><kbd>0</kbd>–<kbd>9</kbd> <b>rakamlar</b></span>
+    <span class="km"><kbd>*</kbd> NumPad <b>×</b> <kbd>#</kbd> NumPad <b>÷</b></span>
+    <span class="kmhint">klavye için önce oyun ekranına tıkla · bazı oyunlarda 2/4/6/8 yön, 5 onay çalışır</span>
+  </div>
+  <div id="stage">
+    <button id="back">← Oyun listesi</button>
+    <iframe id="frame" title="Oyun ekranı" allowfullscreen></iframe>
+    <div id="placeholder">← Soldan bir oyun seç</div>
+  </div>
+</main>
 
 <script>
 let games = [];
-let activeCat = null;
-
-const grid = document.getElementById('grid');
-const catsEl = document.getElementById('cats');
+const listEl = document.getElementById('list');
 const searchEl = document.getElementById('search');
 const countEl = document.getElementById('count');
 const emptyEl = document.getElementById('empty');
+const frameEl = document.getElementById('frame');
+const placeholderEl = document.getElementById('placeholder');
 
 function isMobile(){ return matchMedia('(pointer:coarse)').matches || innerWidth < 760; }
 
@@ -114,69 +138,47 @@ function gameUrl(g){
   return u;
 }
 
+let filtered = [];
 function render(){
   const q = searchEl.value.trim().toLocaleLowerCase('tr');
-  const list = games.filter(g =>
-    (!activeCat || g.c === activeCat) &&
-    (!q || g.n.toLocaleLowerCase('tr').includes(q))
-  );
-  countEl.textContent = list.length + ' oyun';
-  emptyEl.style.display = list.length ? 'none' : '';
-  grid.innerHTML = '';
+  filtered = games.filter(g => !q || g.n.toLocaleLowerCase('tr').includes(q));
+  countEl.textContent = filtered.length + ' oyun';
+  emptyEl.style.display = filtered.length ? 'none' : '';
   const frag = document.createDocumentFragment();
-  for (const g of list){
-    const card = document.createElement('div');
-    card.className = 'card';
-    const name = document.createElement('div');
-    name.className = 'name';
-    name.textContent = g.n;
-    const tag = document.createElement('div');
-    tag.className = 'cat-tag';
-    tag.textContent = g.c;
-    const size = document.createElement('div');
-    size.className = 'size';
-    size.textContent = (g.s/1048576).toFixed(1) + ' MB';
-    const btn = document.createElement('a');
-    btn.className = 'play';
-    btn.href = gameUrl(g);
-    btn.textContent = 'OYNA ▶';
-    card.append(name, tag, size, btn);
-    frag.appendChild(card);
+  for (let i = 0; i < filtered.length; i++){
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.dataset.i = i;
+    row.textContent = filtered[i].n;
+    frag.appendChild(row);
   }
-  grid.appendChild(frag);
+  listEl.innerHTML = '';
+  listEl.appendChild(frag);
 }
 
-function renderCats(){
-  const counts = {};
-  for (const g of games) counts[g.c] = (counts[g.c]||0) + 1;
-  const cats = Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
-  catsEl.innerHTML = '';
-  const all = document.createElement('button');
-  all.className = 'cat active';
-  all.textContent = 'hepsi (' + games.length + ')';
-  all.onclick = () => { activeCat = null; setActive(all); render(); };
-  catsEl.appendChild(all);
-  for (const c of cats){
-    const b = document.createElement('button');
-    b.className = 'cat';
-    b.textContent = c + ' (' + counts[c] + ')';
-    b.onclick = () => { activeCat = c; setActive(b); render(); };
-    catsEl.appendChild(b);
-  }
+function select(i, row){
+  const prev = listEl.querySelector('.row.active');
+  if (prev) prev.classList.remove('active');
+  row.classList.add('active');
+  frameEl.src = gameUrl(filtered[i]);
+  frameEl.style.display = 'block';
+  placeholderEl.style.display = 'none';
+  document.body.classList.add('playing');
 }
-function setActive(btn){
-  catsEl.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));
-  btn.classList.add('active');
-}
+
+listEl.addEventListener('click', e => {
+  const row = e.target.closest('.row');
+  if (row) select(+row.dataset.i, row);
+});
+
+document.getElementById('back').addEventListener('click', () => {
+  document.body.classList.remove('playing');
+});
 
 searchEl.addEventListener('input', render);
-addEventListener('scroll', () => {
-  document.getElementById('backtop').style.display = scrollY > 600 ? '' : 'none';
-});
 
 fetch('games.json').then(r=>r.json()).then(data=>{
   games = data;
-  renderCats();
   render();
 }).catch(()=>{
   emptyEl.style.display = '';
