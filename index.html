@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<title>Eski Java Oyunları - Tarayıcıda Oyna</title>
+<meta name="description" content="Eski tip telefonlar için yapılmış Java (J2ME) oyunlarını tarayıcında doğrudan oyna." />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+:root{
+  --bg:#0a0a0f; --panel:#16161f; --panel2:#1e1e2a;
+  --pink:#ff4fd8; --cyan:#00e5ff; --yellow:#ffe14f; --green:#5dff7a;
+  --text:#d8d8e8; --dim:#8a8aa0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'VT323',monospace;font-size:20px;min-height:100%}
+body{
+  background:
+    radial-gradient(1px 1px at 20% 30%, #fff3, transparent),
+    radial-gradient(1px 1px at 60% 70%, #fff3, transparent),
+    radial-gradient(1px 1px at 80% 20%, #fff2, transparent),
+    radial-gradient(1px 1px at 40% 80%, #fff2, transparent),
+    #0a0a0f;
+}
+header{padding:28px 16px 10px;text-align:center}
+h1{
+  font-family:'Press Start 2P',monospace;font-size:clamp(16px,4vw,28px);margin:0 0 10px;
+  color:var(--yellow);text-shadow:0 0 12px #ffe14f66, 0 0 30px #ff880044;
+  line-height:1.5;
+}
+.sub{color:var(--cyan);font-size:1.1em;letter-spacing:1px}
+.toolbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:14px 12px 4px;position:sticky;top:0;background:#0a0a0fee;backdrop-filter:blur(6px);z-index:5;border-bottom:1px solid #262636}
+#search{
+  background:var(--panel2);border:2px solid var(--cyan);color:#fff;padding:10px 14px;
+  font-family:inherit;font-size:1em;width:min(420px,90vw);outline:none;border-radius:4px;
+  box-shadow:0 0 10px #00e5ff33;
+}
+#search::placeholder{color:var(--dim)}
+#search:focus{box-shadow:0 0 16px #00e5ff77}
+#count{align-self:center;color:var(--dim);font-size:.95em}
+.cats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:12px 12px 0}
+.cat{
+  cursor:pointer;border:2px solid #33334a;background:var(--panel);color:var(--text);
+  padding:6px 12px;font-family:inherit;font-size:.95em;border-radius:4px;transition:.12s;
+}
+.cat:hover{border-color:var(--pink);color:#fff}
+.cat.active{border-color:var(--pink);background:#ff4fd822;color:#fff;box-shadow:0 0 10px #ff4fd844}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:12px;padding:18px 16px 40px;max-width:1200px;margin:0 auto;
+}
+.card{
+  background:linear-gradient(160deg,var(--panel2),var(--panel));
+  border:2px solid #2c2c40;border-radius:6px;padding:14px;
+  display:flex;flex-direction:column;gap:8px;transition:.12s;position:relative;overflow:hidden;
+}
+.card:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 6px 18px #000a,0 0 14px #00e5ff33}
+.card .name{font-size:1.15em;color:#fff;line-height:1.15;word-break:break-word;min-height:1.3em}
+.card .cat-tag{font-size:.85em;color:var(--pink);text-transform:uppercase;letter-spacing:1px}
+.card .size{color:var(--dim);font-size:.85em}
+.play{
+  margin-top:auto;background:var(--green);color:#06210e;border:none;padding:9px 10px;
+  font-family:'Press Start 2P',monospace;font-size:11px;cursor:pointer;border-radius:4px;
+  transition:.1s;box-shadow:0 3px 0 #2eb34a;text-decoration:none;text-align:center;display:block;
+}
+.play:hover{filter:brightness(1.12);box-shadow:0 3px 0 #2eb34a,0 0 14px #5dff7a66}
+.play:active{transform:translateY(2px);box-shadow:0 1px 0 #2eb34a}
+.empty{text-align:center;color:var(--dim);padding:50px 10px;font-size:1.2em}
+footer{text-align:center;color:var(--dim);padding:18px;border-top:1px solid #1e1e2a;font-size:.9em}
+footer a{color:var(--cyan)}
+#backtop{
+  position:fixed;right:14px;bottom:14px;background:var(--panel2);border:2px solid var(--cyan);
+  color:var(--cyan);font-family:inherit;font-size:1em;padding:8px 12px;border-radius:4px;
+  cursor:pointer;display:none;z-index:6;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>ESKİ JAVA OYUNLARI</h1>
+  <div class="sub">★ 2000'lerin telefon oyunları - tarayıcında doğrudan oyna ★</div>
+</header>
+
+<div class="toolbar">
+  <input id="search" type="search" placeholder="oyun ara..." autocomplete="off" />
+  <span id="count"></span>
+</div>
+<div class="cats" id="cats"></div>
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" style="display:none">oyun bulunamadı :(</div>
+
+<footer>
+  J2ME emülatörü: <a href="https://github.com/iqbaladinur/j2me-player" target="_blank" rel="noopener">J2ME Player</a> (FreeJ2ME + CheerpJ) ·
+  tuşlar: yön tuşları = 2468, Q/W = sol/sağ tuş, 1 = onay, ESC = ayarlar
+</footer>
+<button id="backtop" onclick="scrollTo({top:0,behavior:'smooth'})">▲</button>
+
+<script>
+let games = [];
+let activeCat = null;
+
+const grid = document.getElementById('grid');
+const catsEl = document.getElementById('cats');
+const searchEl = document.getElementById('search');
+const countEl = document.getElementById('count');
+const emptyEl = document.getElementById('empty');
+
+function isMobile(){ return matchMedia('(pointer:coarse)').matches || innerWidth < 760; }
+
+function gameUrl(g){
+  let u = 'run.html?jar=' + encodeURIComponent(g.p);
+  if (isMobile()) u += '&mobile=1';
+  return u;
+}
+
+function render(){
+  const q = searchEl.value.trim().toLocaleLowerCase('tr');
+  const list = games.filter(g =>
+    (!activeCat || g.c === activeCat) &&
+    (!q || g.n.toLocaleLowerCase('tr').includes(q))
+  );
+  countEl.textContent = list.length + ' oyun';
+  emptyEl.style.display = list.length ? 'none' : '';
+  grid.innerHTML = '';
+  const frag = document.createDocumentFragment();
+  for (const g of list){
+    const card = document.createElement('div');
+    card.className = 'card';
+    const name = document.createElement('div');
+    name.className = 'name';
+    name.textContent = g.n;
+    const tag = document.createElement('div');
+    tag.className = 'cat-tag';
+    tag.textContent = g.c;
+    const size = document.createElement('div');
+    size.className = 'size';
+    size.textContent = (g.s/1048576).toFixed(1) + ' MB';
+    const btn = document.createElement('a');
+    btn.className = 'play';
+    btn.href = gameUrl(g);
+    btn.textContent = 'OYNA ▶';
+    card.append(name, tag, size, btn);
+    frag.appendChild(card);
+  }
+  grid.appendChild(frag);
+}
+
+function renderCats(){
+  const counts = {};
+  for (const g of games) counts[g.c] = (counts[g.c]||0) + 1;
+  const cats = Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  catsEl.innerHTML = '';
+  const all = document.createElement('button');
+  all.className = 'cat active';
+  all.textContent = 'hepsi (' + games.length + ')';
+  all.onclick = () => { activeCat = null; setActive(all); render(); };
+  catsEl.appendChild(all);
+  for (const c of cats){
+    const b = document.createElement('button');
+    b.className = 'cat';
+    b.textContent = c + ' (' + counts[c] + ')';
+    b.onclick = () => { activeCat = c; setActive(b); render(); };
+    catsEl.appendChild(b);
+  }
+}
+function setActive(btn){
+  catsEl.querySelectorAll('.cat').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+searchEl.addEventListener('input', render);
+addEventListener('scroll', () => {
+  document.getElementById('backtop').style.display = scrollY > 600 ? '' : 'none';
+});
+
+fetch('games.json').then(r=>r.json()).then(data=>{
+  games = data;
+  renderCats();
+  render();
+}).catch(()=>{
+  emptyEl.style.display = '';
+  emptyEl.textContent = 'oyun listesi yüklenemedi';
+});
+</script>
+</body>
+</html>
